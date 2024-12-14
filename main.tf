@@ -39,7 +39,7 @@ module "vpc" {
   cidr_private = ["10.0.4.0/24", "10.0.6.0/24"]
   cidr_db      = ["10.0.8.0/24", "10.0.10.0/24"]
   cidr_all     = "0.0.0.0/0"
-  sg_office_ip = "61.78.140.93/32"
+  sg_office_ip = "0.0.0.0/0"
   protocol_tcp = "tcp"
   protocol_all = "-1"
   port_all     = "0"
