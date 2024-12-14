@@ -66,7 +66,7 @@ module "compute" {
   host_header         = "whitehair.store"
   ami_amznlinux3      = "ami-0f1e61a80c7ab943e"
   ami_ubuntu20_04     = "ami-042e76978adeb8c48"
-  acm_arn             = "arn:aws:acm:${data.aws_region.current.name}:${data.aws_region.current.name}:certificate/16042306-a754-4583-9bb1-c4d498e5d59f"
+  acm_arn             = "arn:aws:acm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:certificate/a6ba7ac0-3650-45c1-b6a4-6f410125e94d"
   ec2_type_bastion    = "t3.medium"
   vpc_id              = module.vpc.vpc_id
   pub_subnet          = module.vpc.pub_subnet
