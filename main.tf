@@ -62,8 +62,8 @@ module "compute" {
   region              = data.aws_region.current.name
   ava_zone            = ["a", "c"]
   tag_name            = local.tag_name
-  key_name            = "jinwoo-ap2"
-  host_header         = "whitehair.store"
+  key_name            = "keykey"
+  host_header         = "campinggo.store"
   ami_amznlinux3      = "ami-0f1e61a80c7ab943e"
   ami_ubuntu20_04     = "ami-042e76978adeb8c48"
   acm_arn             = "arn:aws:acm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:certificate/a6ba7ac0-3650-45c1-b6a4-6f410125e94d"
