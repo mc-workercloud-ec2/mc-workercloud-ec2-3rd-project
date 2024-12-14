@@ -105,7 +105,7 @@ module "container" {
   source                             = "./module/container"
   region                             = data.aws_region.current.name
   tag_name                           = local.tag_name
-  account                            = data.aws_region.current
+  account                            = data.aws_region.current.name
   container_name                     = "jinwoo"
   front_arn                          = module.compute.aws_lb_target_group_80
   app_back_tg_arn                    = module.compute.aws_lb_target_group_8080
@@ -135,6 +135,11 @@ module "container" {
   task_def_memory    = "1024"
 }
 
+
+module "githubactions" {
+  source = "./module/githubactions"
+  account_id = data.aws_caller_identity.current.account_id
+}
 
 #######################################################
 ## backend                                         ##
