@@ -12,6 +12,7 @@ resource "aws_instance" "bastion_ec2" {
   availability_zone           = "${var.region}${var.ava_zone[1]}"
   subnet_id                   = var.pub_subnet[1]
   vpc_security_group_ids      = [var.bastion_sg]
+  iam_instance_profile = aws_iam_instance_profile.ssm.name
   associate_public_ip_address = true
   root_block_device {
     volume_size           = 8
@@ -28,6 +29,7 @@ resource "aws_instance" "Monitoring_ec2" {
   ami                         = var.ami_ubuntu20_04
   instance_type               = "t3.large"
   key_name                    = "${var.tag_name}-key"
+  iam_instance_profile = aws_iam_instance_profile.ssm.name
   availability_zone           = "${var.region}${var.ava_zone[1]}"
   subnet_id                   = var.pri_subnet[1]
   vpc_security_group_ids      = [var.monitoring_sg]
@@ -40,4 +42,35 @@ resource "aws_instance" "Monitoring_ec2" {
   tags = {
     Name = "${var.tag_name}-monitoring"
   }
+}
+
+
+data "aws_iam_policy_document" "ssm" {
+  version = "2012-10-17"
+  statement {
+    sid     = ""
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_instance_profile" "ssm" {
+  name = "ssm-role"
+  role = aws_iam_role.ssm.name
+}
+
+
+resource "aws_iam_role" "ssm" {
+  name               = "ssm-role"
+  assume_role_policy = data.aws_iam_policy_document.ssm.json
+}
+
+resource "aws_iam_role_policy_attachment" "ssm" {
+  role       = aws_iam_role.ssm.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }

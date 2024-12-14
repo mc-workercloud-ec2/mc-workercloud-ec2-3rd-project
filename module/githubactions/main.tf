@@ -30,7 +30,7 @@ resource "aws_iam_role" "github_role" {
                     "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
                 },
                 "StringLike": {
-                    "token.actions.githubusercontent.com:sub": "repo:ksooo091/*"
+                    "token.actions.githubusercontent.com:sub": "repo:mc-workercloud-ec2/*"
                 }
             }
         }
