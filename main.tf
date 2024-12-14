@@ -15,10 +15,12 @@
 # 3. container
 ## container_name 
 
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+
 locals {
   tag_name = "ec2team-241214"
-  region   = "ap-northeast-2"
-  account  = "981638470970"
+
 }
 
 #######################################################
@@ -28,7 +30,7 @@ locals {
 module "vpc" {
   source = "./module/vpc"
 
-  region       = local.region
+  region       = data.aws_region.current.name
   cidr_main    = "10.0.0.0/16"
   tag_name     = local.tag_name
   ava_zone     = ["a", "c"]
@@ -57,14 +59,14 @@ module "vpc" {
 module "compute" {
   source = "./module/compute"
 
-  region              = local.region
+  region              = data.aws_region.current.name
   ava_zone            = ["a", "c"]
   tag_name            = local.tag_name
   key_name            = "jinwoo-ap2"
   host_header         = "whitehair.store"
   ami_amznlinux3      = "ami-0f1e61a80c7ab943e"
   ami_ubuntu20_04     = "ami-042e76978adeb8c48"
-  acm_arn             = "arn:aws:acm:${local.region}:${local.account}:certificate/16042306-a754-4583-9bb1-c4d498e5d59f"
+  acm_arn             = "arn:aws:acm:${data.aws_region.current.name}:${data.aws_region.current.name}:certificate/16042306-a754-4583-9bb1-c4d498e5d59f"
   ec2_type_bastion    = "t3.medium"
   vpc_id              = module.vpc.vpc_id
   pub_subnet          = module.vpc.pub_subnet
@@ -101,9 +103,9 @@ module "compute" {
 
 module "container" {
   source                             = "./module/container"
-  region                             = local.region
+  region                             = data.aws_region.current.name
   tag_name                           = local.tag_name
-  account                            = local.account
+  account                            = data.aws_region.current
   container_name                     = "jinwoo"
   front_arn                          = module.compute.aws_lb_target_group_80
   app_back_tg_arn                    = module.compute.aws_lb_target_group_8080
@@ -127,7 +129,7 @@ module "container" {
   front_health_check_grace_period_seconds = "0"
   back_health_check_grace_period_seconds  = "30"
 
-  execution_role_arn = "arn:aws:iam::${local.account}:role/ecsTaskExecutionRole"
+  execution_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
   network_mode       = "awsvpc"
   task_def_cpu       = "512"
   task_def_memory    = "1024"
