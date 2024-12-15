@@ -1,6 +1,11 @@
 ### ECS Cluster 생성 ###
 resource "aws_ecs_cluster" "ECSCluster" {
     name = "${var.tag_name}-ecs-cluster"
+
+    setting {
+      name  = "containerInsights"
+      value = "enabled"
+    }
 }
 
 ### ECS Front Service
