@@ -1,9 +1,10 @@
+
 data "aws_route53_zone" "campinggo" {
-  name         = "campinggo.store."
+  name         = "${var.domain}."
 }
 resource "aws_route53_record" "admin_record" {
   zone_id = data.aws_route53_zone.campinggo.zone_id
-  name    = "www.campinggo.store"
+  name    = "www.${var.domain}"
   type    = "CNAME"
   ttl     = "300"
   records = [aws_lb.web_alb.dns_name]
@@ -11,28 +12,28 @@ resource "aws_route53_record" "admin_record" {
 
 resource "aws_route53_record" "applicant_record" {
   zone_id = data.aws_route53_zone.campinggo.zone_id
-  name    = "applicant.campinggo.store"
+  name    = "applicant.${var.domain}"
   type    = "CNAME"
   ttl     = "300"
   records = [aws_lb.was_alb.dns_name]
 }
 resource "aws_route53_record" "jobposting_record" {
   zone_id = data.aws_route53_zone.campinggo.zone_id
-  name    = "jobposting.campinggo.store"
+  name    = "jobposting.${var.domain}"
   type    = "CNAME"
   ttl     = "300"
   records = [aws_lb.was_alb.dns_name]
 }
 resource "aws_route53_record" "zabbix_record" {
   zone_id = data.aws_route53_zone.campinggo.zone_id
-  name    = "zabbix.campinggo.store"
+  name    = "zabbix.${var.domain}"
   type    = "CNAME"
   ttl     = "300"
   records = [aws_lb.web_alb.dns_name]
 }
 resource "aws_route53_record" "grafana_record" {
   zone_id = data.aws_route53_zone.campinggo.zone_id
-  name    = "grafana.campinggo.store"
+  name    = "grafana.${var.domain}"
   type    = "CNAME"
   ttl     = "300"
   records = [aws_lb.web_alb.dns_name]

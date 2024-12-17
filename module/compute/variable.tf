@@ -18,9 +18,12 @@ variable "ami_ubuntu20_04" {
   type = string
 }
 
-variable "acm_arn" {
+variable "domain" {
   type = string
 }
+# variable "acm_arn" {
+#   type = string
+# }
 
 variable "ec2_type_bastion" {
   type = string

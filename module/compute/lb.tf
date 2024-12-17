@@ -1,3 +1,9 @@
+data "aws_acm_certificate" "issued_cert" {
+  domain   = var.domain
+  statuses = ["ISSUED"]
+}
+
+
 ### Web ALB 생성 ###
 resource "aws_lb" "web_alb" {
   name               = "${var.tag_name}-web-alb"
@@ -35,7 +41,7 @@ resource "aws_lb_listener" "web_alb_listener_443" {
   port              = var.port_443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-  certificate_arn   = var.acm_arn
+  certificate_arn   = data.aws_acm_certificate.issued_cert.arn
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.web_alb_tg.arn
@@ -175,7 +181,7 @@ resource "aws_lb_listener" "was_alb_listener_443" {
   port              = var.port_443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-  certificate_arn   = var.acm_arn
+  certificate_arn   = data.aws_acm_certificate.issued_cert.arn
 
   default_action {
     type = "fixed-response"
